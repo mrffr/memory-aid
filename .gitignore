@@ -1,2 +1,3 @@
 Notes
 *.csv
+__pycache__/
