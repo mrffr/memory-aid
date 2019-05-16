@@ -21,7 +21,7 @@ def ask_questions(qs):
     # shuffle the questions
     random.shuffle(qs)
 
-    print("Asking {} questions".format(n))
+    print("Asking {} questions".format(len(qs)))
     print("Rate the ease of answering each question as follows:")
     print("""5 - perfect response
 4 - correct response after a hesitation
