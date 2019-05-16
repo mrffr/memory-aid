@@ -13,7 +13,7 @@ def construct_question(q, a, next_time,
         "question" : q,
         "answer" : a,
 
-        "next_time" : next_time,
+        "next_time" : next_time, # date
         "interval" : interval, # in days
         "ease" : ease,
 
@@ -36,8 +36,7 @@ def import_questions_csv(fname):
     csvr = csv.reader(f)
 
     # get the date
-    now = datetime.datetime.now()
-    now = now.replace(hour=0, minute=0, second=0, microsecond=0) # day
+    today = datetime.datetime.now().date()
 
     # import each question
     questions = []
@@ -51,7 +50,7 @@ def import_questions_csv(fname):
         print("Found:", q, a, tags)
 
         # create question and add to question list
-        new_q = construct_question(q, a, now, tags = tags)
+        new_q = construct_question(q, a, today, tags = tags)
         questions.append(new_q)
 
     f.close()
@@ -96,7 +95,7 @@ def load_questions_json(fname):
     # convert time string to datetime object
     qs = []
     for q in json_file:
-        q['next_time'] = datetime.datetime.strptime(q['next_time'], "%Y-%m-%d")
+        q['next_time'] = datetime.datetime.strptime(q['next_time'], "%Y-%m-%d").date()
         qs.append(q)
 
     print("Load successful:", len(qs), "questions loaded.")

@@ -33,6 +33,11 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(q['times_answered'], 0)
         self.assertEqual(q['tags'], [])
 
+    def test_session(self):
+        now = datetime.datetime.now().date()
+        test_qs = [{'next_time': now, 'repetitions': 1}]
+        self.assertEqual(ma.build_session_questions(test_qs, now), test_qs)
+
 
 if __name__ == '__main__':
     unittest.main()
