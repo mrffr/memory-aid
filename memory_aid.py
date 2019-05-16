@@ -78,10 +78,9 @@ def export_questions(fname, questions):
 
     f.write(json.dumps(questions, default=serial_helper))
 
-
     f.close()
 
-    return False
+    return True
 
 # load questions from json file
 def load_questions(fname):

@@ -16,18 +16,16 @@ class TestMemoryAid(unittest.TestCase):
         # test exporting the questions to json
         self.assertEqual(ma.export_questions('test.json', qs), True)
 
-
-
     def test_question(self):
         now = datetime.datetime.now()
-        q = ma.question("q", "a", now)
-        self.assertEqual(q.question, "q")
-        self.assertEqual(q.answer, "a")
-        self.assertEqual(q.next_time, now)
-        self.assertEqual(q.interval, 1)
-        self.assertEqual(q.ease, 2.5)
-        self.assertEqual(q.times_answered, 0)
-        self.assertEqual(q.tags, [])
+        q = ma.construct_question("q", "a", now)
+        self.assertEqual(q['question'], "q")
+        self.assertEqual(q['answer'], "a")
+        self.assertEqual(q['next_time'], now)
+        self.assertEqual(q['interval'], 1)
+        self.assertEqual(q['ease'], 2.5)
+        self.assertEqual(q['times_answered'], 0)
+        self.assertEqual(q['tags'], [])
 
 
 if __name__ == '__main__':
