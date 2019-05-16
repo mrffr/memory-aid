@@ -8,38 +8,77 @@ from import_export import *
 
 # questions for this session are questions due <= today
 # or new questions
+# session list is index of question in master list
 def build_session_questions(all_qs, today):
-    session = []
-    for q in all_qs:
+    session_ind = []
+    for i in range(len(all_qs)):
+        q = all_qs[i]
         if q['next_time'] <= today or q['repetitions'] == 0:
-            session.append(q)
+            session_ind.append(i)
 
-    print("Questions available this session:", len(session))
-    return session
+    print("Questions available this session:", len(session_ind))
+    return session_ind
 
-def ask_questions(qs):
-    # shuffle the questions
-    random.shuffle(qs)
+def update_question(all_qs, index, ease):
+    pass
 
+def ask_question(q):
+    print("Q:", q.question)
+    input()
+    print("A:", q.answer)
+
+    # get ease of answer
+    while True:
+        inp = input('Ease [0..5] or (q)uit= ')
+
+        if inp == 'q':
+            return -1
+
+        try:
+            inp = int(inp)
+        except:
+            continue
+
+        if inp < 0 or inp > 5:
+            print(inp, "is not a valid choice")
+            continue
+
+        return inp
+
+def session(all_qs, session_ind):
     print("Asking {} questions".format(len(qs)))
     print("Rate the ease of answering each question as follows:")
-    print("""5 - perfect response
-4 - correct response after a hesitation
-3 - correct response recalled with serious difficulty
-2 - incorrect response; where the correct one seemed easy to recall
-1 - incorrect response; the correct one remembered
-0 - complete blackout.""")
+    print("""5 - Perfect response
+4 - Correct response after a hesitation
+3 - Correct response recalled with serious difficulty
+2 - Incorrect response; where the correct one seemed easy to recall
+1 - Incorrect response; the correct one remembered
+0 - Complete blackout""")
 
-    pass
+    # ask the questions
+    for ind in session_ind:
+        ease = ask_question(all_qs[ind])
+
+        # check for quitting
+        if ease == -1:
+            return all_qs
+
+        update_question(all_qs, ind, ease)
+
+
+    return all_qs
 
 def main():
     all_qs = load_questions_json('test.json')
 
     # get questions for this session
     today = datetime.datetime.now().date()
-    session_qs = build_session_questions(all_qs, today)
+    session_ind = build_session_questions(all_qs, today)
 
-    ask_questions(session_qs)
+    # shuffle the questions
+    random.shuffle(session_ind)
+
+    all_qs = session(all_qs, session_ind)
 
     pass
 
