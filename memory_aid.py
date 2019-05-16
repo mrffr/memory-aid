@@ -4,6 +4,7 @@ import sys
 import csv
 import datetime
 import json
+import copy
 
 
 # question is dictionary of key values
@@ -25,7 +26,7 @@ def construct_question(q, a, next_time,
 
 # import questions from csv file and return list of questions
 # questions are in format: q,a
-def import_questions(fname):
+def import_questions_csv(fname):
     print("Importing questions from", fname)
 
     try:
@@ -62,39 +63,47 @@ def import_questions(fname):
     return questions
 
 # export questions to json file
-def export_questions(fname, questions):
+def export_questions_json(fname, questions):
     try:
         f = open(fname, 'w')
     except OSError as e:
         print("Export failed:", e)
         return False
 
-    # convert datetime object to isoformat for json serizlization
-    # https://stackoverflow.com/questions/11875770/how-to-overcome-datetime-datetime-not-json-serializable
-    def serial_helper(obj):
-        if isinstance(obj, (datetime.datetime, datetime.date)):
-            return obj.isoformat()
-        raise TypeError("Type {} is not serializable".format(type(obj)))
+    # create copy of questions to handle
+    # converting datetime object to a formatted string for json
+    temp_q = copy.deepcopy(questions)
+    for q in temp_q:
+        q['next_time'] = q['next_time'].strftime("%Y-%m-%d")
 
-    f.write(json.dumps(questions, default=serial_helper))
+    # write to file
+    json.dump(temp_q, f)
 
     f.close()
 
     return True
 
 # load questions from json file
-def load_questions(fname):
+def load_questions_json(fname):
     # read in json file
     try:
         f = open(fname, 'r')
     except OSError as e:
         print("Loading failed:", e)
+        return None
 
     json_file = json.load(f)
     f.close()
 
+    # convert time string to datetime object
+    qs = []
+    for q in json_file:
+        q['next_time'] = datetime.datetime.strptime(q['next_time'], "%Y-%m-%d")
+        qs.append(q)
 
-    pass
+    print("Load successful:", len(qs), "questions loaded.")
+
+    return qs
 
 def main():
     pass

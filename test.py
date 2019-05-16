@@ -9,12 +9,18 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(1, 1)
 
     def test_import_export(self):
-        self.assertEqual(ma.import_questions('not_a_file'), None)
-        qs = ma.import_questions('import_test.csv')
+        self.assertEqual(ma.import_questions_csv('not_a_file'), None)
+        qs = ma.import_questions_csv('import_test.csv')
         self.assertNotEqual(qs, None)
 
         # test exporting the questions to json
-        self.assertEqual(ma.export_questions('test.json', qs), True)
+        self.assertEqual(ma.export_questions_json('test.json', qs), True)
+
+        # test loading the questions again
+        loaded = ma.load_questions_json('test.json')
+        self.assertEqual(loaded, qs)
+
+        self.assertEqual(ma.load_questions_json('not_a_file'), None)
 
     def test_question(self):
         now = datetime.datetime.now()
