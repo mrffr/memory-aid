@@ -32,7 +32,7 @@ def import_questions_csv(fname):
         f = open(fname, 'r')
     except OSError as e:
         print("Import failed:", e)
-        return None
+        return []
 
     csvr = csv.reader(f)
 
@@ -43,7 +43,7 @@ def import_questions_csv(fname):
     questions = []
     for line in csvr:
         # question format is q, a, [tags, ]
-        if len(line) < 2 or len(line) > 3:
+        if len(line) < 2:
             continue
 
         # found a question
@@ -56,12 +56,15 @@ def import_questions_csv(fname):
 
     f.close()
 
-    print("Import successful:", len(questions), "new questions found.")
+    print(len(questions), "new questions found.")
 
     return questions
 
 # export questions to json file
 def export_questions_json(fname, questions):
+    if questions == []:
+        return False
+
     try:
         f = open(fname, 'w')
     except OSError as e:
@@ -78,7 +81,6 @@ def export_questions_json(fname, questions):
     json.dump(temp_q, f)
 
     f.close()
-
     return True
 
 # load questions from json file
@@ -88,7 +90,7 @@ def load_questions_json(fname):
         f = open(fname, 'r')
     except OSError as e:
         print("Loading failed:", e)
-        return None
+        return []
 
     json_file = json.load(f)
     f.close()

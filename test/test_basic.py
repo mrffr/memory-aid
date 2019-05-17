@@ -13,11 +13,11 @@ class TestMemoryAid(unittest.TestCase):
     def test_import_export(self):
         dirname = os.path.dirname(__file__)
 
-        self.assertEqual(impexp.import_questions_csv('not_a_file'), None)
+        self.assertEqual(impexp.import_questions_csv('not_a_file'), [])
 
         test_csv_file = os.path.join(dirname, 'import_test.csv')
         qs = impexp.import_questions_csv(test_csv_file)
-        self.assertNotEqual(qs, None)
+        self.assertNotEqual(qs, [])
 
         # test exporting the questions to json
         test_json_file = os.path.join(dirname, 'test.json')
@@ -27,7 +27,7 @@ class TestMemoryAid(unittest.TestCase):
         loaded = impexp.load_questions_json(test_json_file)
         self.assertEqual(loaded, qs)
 
-        self.assertEqual(impexp.load_questions_json('not_a_file'), None)
+        self.assertEqual(impexp.load_questions_json('not_a_file'), [])
 
     def test_question(self):
         now = datetime.datetime.now()

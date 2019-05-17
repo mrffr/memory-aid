@@ -17,7 +17,7 @@ def build_session_question_index(all_qs, today):
     session_ind = []
     for i in range(len(all_qs)):
         q = all_qs[i]
-        if q['next_time'] <= today or q['repetitions'] == 0:
+        if q['next_time'] <= today or q['correct_run'] == 0:
             session_ind.append(i)
 
     print("Questions available this session:", len(session_ind))
@@ -90,7 +90,10 @@ def ask_question(question):
 
 # ask the questions for this session and update based on answers
 def session(all_qs, session_ind):
-    print("Asking {} questions".format(len(all_qs)))
+    if session_ind == []:
+        return all_qs
+
+    print("Asking {} questions".format(len(session_ind)))
     print("Rate the ease of answering each question as follows:")
     print("""5 - Perfect response
 4 - Correct response after a hesitation
@@ -118,19 +121,24 @@ def session(all_qs, session_ind):
 
 # handle importing questions
 def importing_questions(fname, all_qs):
-    imp_qs = impexp.import_questions_csv(args.imp.name)
+    imp_qs = impexp.import_questions_csv(fname)
 
     # none found then just return
-    if imp_qs == None or imp_qs == []:
-        return
+    if imp_qs == []:
+        return []
 
     # need to merge it with the original set of questions
     # ATM no duplicate detection or anything
+
     return all_qs + imp_qs
 
 def main():
     # parse cmdline args
     parser = argparse.ArgumentParser(description='Memory helper/tester.')
+    parser.add_argument('--tags',
+                        nargs='*',
+                        type=str,
+                        help="Filter questions available based on tags")
     parser.add_argument('--imp',
                         type=argparse.FileType('r'),
                         help="Import new questions from csv file.")
@@ -148,11 +156,14 @@ def main():
     if args.imp:
         merged_qs = importing_questions(args.imp.name, all_qs)
         impexp.export_questions_json(question_file, merged_qs)
+        print("Import Successful!")
         return
 
     # at this stage having no questions means something went wrong
-    if all_qs == None:
-        sys.exit(1)
+    # since we aren't importing
+    if all_qs == []:
+        print("No questions found.")
+        return
 
     # get questions for this session
     today = datetime.datetime.now().date()
@@ -160,6 +171,9 @@ def main():
 
     # filter questions that don't match desired tags
     tags = []
+    if args.tags:
+        tags = args.tags
+
     session_ind = filter_tags(all_qs, session_ind, tags)
 
     # shuffle the questions
