@@ -4,6 +4,7 @@ import csv
 import copy
 import json
 import datetime
+import sys
 
 # question is dictionary of key values
 # returns base question

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import sys
+import os
 import datetime
 import random
 import math
-from import_export import *
+
+from . import import_export as impexp
 
 
 # questions for this session are questions due <= today
@@ -63,9 +65,9 @@ def update_question(question, ease):
     return question
 
 def ask_question(question):
-    print("Q:", question.question)
+    print("Q:", question['question'])
     input()
-    print("A:", question.answer)
+    print("A:", question['answer'])
 
     # get ease of answer
     while True:
@@ -114,7 +116,14 @@ def session(all_qs, session_ind):
     return all_qs
 
 def main():
-    all_qs = load_questions_json('test.json')
+    dirname = os.path.dirname(__file__)
+    test_file = os.path.join(dirname, '../test/test.json')
+    test2_file = os.path.join(dirname, '../test/test2.json')
+
+    all_qs = impexp.load_questions_json(test_file)
+
+    if all_qs == None:
+        sys.exit(1)
 
     # get questions for this session
     today = datetime.datetime.now().date()
@@ -129,7 +138,7 @@ def main():
 
     all_qs = session(all_qs, session_ind)
 
-    export_questions_json('test2.json', all_qs)
+    impexp.export_questions_json(test2_file, all_qs)
 
 
 if __name__ == "__main__":

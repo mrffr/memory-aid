@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import unittest
-import memory_aid as ma
+import os
+from memory_aid import memory_aid as ma
+from memory_aid import import_export as impexp
 import datetime
 
 class TestMemoryAid(unittest.TestCase):
@@ -9,22 +11,27 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(1, 1)
 
     def test_import_export(self):
-        self.assertEqual(ma.import_questions_csv('not_a_file'), None)
-        qs = ma.import_questions_csv('import_test.csv')
+        dirname = os.path.dirname(__file__)
+
+        self.assertEqual(impexp.import_questions_csv('not_a_file'), None)
+
+        test_csv_file = os.path.join(dirname, 'import_test.csv')
+        qs = impexp.import_questions_csv(test_csv_file)
         self.assertNotEqual(qs, None)
 
         # test exporting the questions to json
-        self.assertEqual(ma.export_questions_json('test.json', qs), True)
+        test_json_file = os.path.join(dirname, 'test.json')
+        self.assertEqual(impexp.export_questions_json(test_json_file, qs), True)
 
         # test loading the questions again
-        loaded = ma.load_questions_json('test.json')
+        loaded = impexp.load_questions_json(test_json_file)
         self.assertEqual(loaded, qs)
 
-        self.assertEqual(ma.load_questions_json('not_a_file'), None)
+        self.assertEqual(impexp.load_questions_json('not_a_file'), None)
 
     def test_question(self):
         now = datetime.datetime.now()
-        q = ma.construct_question("q", "a", now)
+        q = impexp.construct_question("q", "a", now)
         self.assertEqual(q['question'], "q")
         self.assertEqual(q['answer'], "a")
         self.assertEqual(q['next_time'], now)
@@ -40,9 +47,9 @@ class TestMemoryAid(unittest.TestCase):
 
     def test_filter_tags(self):
         now = datetime.datetime.now().date()
-        test_qs = [ma.construct_question("q","a",now,tags=["1","2"]),
-                   ma.construct_question("q2","a2",now,tags=["2"]),
-                   ma.construct_question("q3","a3",now,tags=["3"])]
+        test_qs = [impexp.construct_question("q","a",now,tags=["1","2"]),
+                   impexp.construct_question("q2","a2",now,tags=["2"]),
+                   impexp.construct_question("q3","a3",now,tags=["3"])]
 
         session_ind = ma.build_session_question_index(test_qs, now)
         self.assertEqual(ma.filter_tags(test_qs, session_ind, ["1"]), [0])
@@ -55,7 +62,7 @@ class TestMemoryAid(unittest.TestCase):
 
     def test_update_question(self):
         now = datetime.datetime.now()
-        q = ma.construct_question("q", "a", now)
+        q = impexp.construct_question("q", "a", now)
 
         orig_q = dict(q) # copy dict for comparisons below
 
