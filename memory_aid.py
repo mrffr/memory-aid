@@ -3,6 +3,7 @@
 import sys
 import datetime
 import random
+import math
 from import_export import *
 
 
@@ -21,24 +22,30 @@ def build_session_question_index(all_qs, today):
 
 # filter the session cards based on the tags selected
 def filter_tags(all_qs, session_ind, tags):
-    return session_ind
+    new_ind = []
+    for ind in session_ind:
+        q = all_qs[ind]
+        for tag in tags:
+            if tag in q['tags']:
+                new_ind.append(ind)
+    return new_ind
 
 # update the question to set the next time we want to see it
 def update_question(question, ease):
-
     # calculate new easiness for the question
     # based off past easiness
+    ## TODO replace this with something else
     val = question['ease'] + (0.1 - (5.0 - ease) * (0.08 + (5.0 - ease) * 0.02))
     question['ease'] = max(1.3, val)
 
-    # we got it wrong
+    # if we got it wrong then reset correct_run
     if ease < 3:
         question['correct_run'] = 0
     else:
         question['correct_run'] += 1
 
     # calculate the next interval to see the card
-    if question['correct_run'] == 1:
+    if question['correct_run'] <= 1:
         question['interval'] = 1
     elif question['correct_run'] == 2:
         question['interval'] = 2
@@ -46,7 +53,6 @@ def update_question(question, ease):
         question['interval'] *= question['ease']
 
     # calculate the date based off the new interval
-
     # calculate today in here in case user has program open for a long time
     today = datetime.datetime.now().date()
     question['next_time'] = today + datetime.timedelta(days=math.ceil(question['interval']))
@@ -111,12 +117,14 @@ def main():
     today = datetime.datetime.now().date()
     session_ind = build_session_question_index(all_qs, today)
 
-    session_ind = filter_tags(all_qs, session_ind)
+    session_ind = filter_tags(all_qs, session_ind, tags)
 
     # shuffle the questions
     random.shuffle(session_ind)
 
     all_qs = session(all_qs, session_ind)
+
+    export_questions_json('test2.json', all_qs)
 
 
 if __name__ == "__main__":

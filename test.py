@@ -38,6 +38,54 @@ class TestMemoryAid(unittest.TestCase):
         test_qs = [{'next_time': now, 'repetitions': 1}]
         self.assertEqual(ma.build_session_question_index(test_qs, now), [0])
 
+    def test_filter_tags(self):
+        now = datetime.datetime.now().date()
+        test_qs = [ma.construct_question("q","a",now,tags=["1","2"]),
+                   ma.construct_question("q2","a2",now,tags=["2"]),
+                   ma.construct_question("q3","a3",now,tags=["3"])]
+
+        session_ind = ma.build_session_question_index(test_qs, now)
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, ["1"]), [0])
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, ["2"]), [0,1])
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, ["3"]), [2])
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, ["4","-1","1"]), [0])
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, ["4","-1","tech"]), [])
+
+    def test_update_question(self):
+        now = datetime.datetime.now()
+        q = ma.construct_question("q", "a", now)
+
+        orig_q = dict(q) # copy dict for comparisons below
+
+        # test we got it wrong
+        q['ease'] = 3
+        upd_q = ma.update_question(q, 0)
+        self.assertEqual(upd_q['ease'], 2.2)
+        self.assertEqual(upd_q['correct_run'], 0)
+        self.assertEqual(upd_q['interval'], 1)
+
+        # we got it right
+        q = dict(orig_q) # reset question
+        q['correct_run'] = 1
+        upd_q = ma.update_question(q, 5)
+        self.assertEqual(upd_q['ease'], 2.6)
+        self.assertEqual(upd_q['correct_run'], 2)
+        self.assertEqual(upd_q['interval'], 2)
+
+        # right again
+        upd_q = ma.update_question(q, 5)
+        self.assertEqual(upd_q['ease'], 2.7)
+        self.assertEqual(upd_q['correct_run'], 3)
+        self.assertEqual(upd_q['interval'], 5.4)
+
+        # wrong
+        upd_q = ma.update_question(q, 2)
+        self.assertEqual(upd_q['ease'], 2.38)
+        self.assertEqual(upd_q['correct_run'], 0)
+        self.assertEqual(upd_q['interval'], 1)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
