@@ -22,6 +22,9 @@ def build_session_question_index(all_qs, today):
 
 # filter the session cards based on the tags selected
 def filter_tags(all_qs, session_ind, tags):
+    if tags == []:
+        return session_ind
+
     new_ind = []
     for ind in session_ind:
         q = all_qs[ind]
@@ -84,7 +87,7 @@ def ask_question(question):
 
 # ask the questions for this session and update based on answers
 def session(all_qs, session_ind):
-    print("Asking {} questions".format(len(qs)))
+    print("Asking {} questions".format(len(all_qs)))
     print("Rate the ease of answering each question as follows:")
     print("""5 - Perfect response
 4 - Correct response after a hesitation
@@ -117,6 +120,8 @@ def main():
     today = datetime.datetime.now().date()
     session_ind = build_session_question_index(all_qs, today)
 
+    # filter questions that don't match desired tags
+    tags = []
     session_ind = filter_tags(all_qs, session_ind, tags)
 
     # shuffle the questions

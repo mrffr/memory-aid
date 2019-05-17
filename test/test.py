@@ -50,6 +50,8 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(ma.filter_tags(test_qs, session_ind, ["3"]), [2])
         self.assertEqual(ma.filter_tags(test_qs, session_ind, ["4","-1","1"]), [0])
         self.assertEqual(ma.filter_tags(test_qs, session_ind, ["4","-1","tech"]), [])
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, []), [0,1,2])
+        self.assertEqual(ma.filter_tags([], [], []), [])
 
     def test_update_question(self):
         now = datetime.datetime.now()
