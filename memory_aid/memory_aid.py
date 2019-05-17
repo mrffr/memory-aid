@@ -5,6 +5,7 @@ import os
 import datetime
 import random
 import math
+import argparse
 
 from . import import_export as impexp
 
@@ -115,13 +116,41 @@ def session(all_qs, session_ind):
 
     return all_qs
 
+# handle importing questions
+def importing_questions(fname, all_qs):
+    imp_qs = impexp.import_questions_csv(args.imp.name)
+
+    # none found then just return
+    if imp_qs == None or imp_qs == []:
+        return
+
+    # need to merge it with the original set of questions
+    # ATM no duplicate detection or anything
+    return all_qs + imp_qs
+
 def main():
+    # parse cmdline args
+    parser = argparse.ArgumentParser(description='Memory helper/tester.')
+    parser.add_argument('--imp',
+                        type=argparse.FileType('r'),
+                        help="Import new questions from csv file.")
+    args = parser.parse_args()
+
+    # load in questions
     dirname = os.path.dirname(__file__)
-    test_file = os.path.join(dirname, '../test/test.json')
-    test2_file = os.path.join(dirname, '../test/test2.json')
+    question_file = os.path.join(dirname, '../questions/questions.json')
 
-    all_qs = impexp.load_questions_json(test_file)
+    all_qs = impexp.load_questions_json(question_file)
 
+    # import questions from csv file, merge with existing questions
+    # and then save to json
+    # we import into existing or empty questions so do it here
+    if args.imp:
+        merged_qs = importing_questions(args.imp.name, all_qs)
+        impexp.export_questions_json(question_file, merged_qs)
+        return
+
+    # at this stage having no questions means something went wrong
     if all_qs == None:
         sys.exit(1)
 
@@ -138,7 +167,7 @@ def main():
 
     all_qs = session(all_qs, session_ind)
 
-    impexp.export_questions_json(test2_file, all_qs)
+    impexp.export_questions_json(question_file, all_qs)
 
 
 if __name__ == "__main__":
