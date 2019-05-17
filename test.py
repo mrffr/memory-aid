@@ -36,7 +36,7 @@ class TestMemoryAid(unittest.TestCase):
     def test_session(self):
         now = datetime.datetime.now().date()
         test_qs = [{'next_time': now, 'repetitions': 1}]
-        self.assertEqual(ma.build_session_questions(test_qs, now), test_qs)
+        self.assertEqual(ma.build_session_question_index(test_qs, now), [0])
 
 
 if __name__ == '__main__':

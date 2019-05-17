@@ -6,18 +6,18 @@ import json
 import datetime
 
 # question is dictionary of key values
-def construct_question(q, a, next_time,
-                       interval = 1, ease = 2.5,
-                       times_answered = 0, tags = []):
+# returns base question
+def construct_question(q, a, next_time, tags = []):
     return {
         "question" : q,
         "answer" : a,
 
         "next_time" : next_time, # date
-        "interval" : interval, # in days
-        "ease" : ease,
+        "interval" : 1, # in days
+        "ease" : 2.5,
+        "correct_run": 0,
 
-        "times_answered" : times_answered,
+        "times_answered" : 0,
         "tags" : tags
         }
 
