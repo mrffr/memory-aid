@@ -14,7 +14,7 @@ def construct_question(q, a, next_time, tags = []):
         "answer" : a,
 
         "next_time" : next_time, # date
-        "interval" : 1, # in days
+        "interval" : 0, # in days
         "ease" : 2.5,
         "correct_run": 0,
 
@@ -78,7 +78,8 @@ def export_questions_json(fname, questions):
         q['next_time'] = q['next_time'].strftime("%Y-%m-%d")
 
     # write to file
-    json.dump(temp_q, f)
+    # indent to make it easier for user to edit later
+    json.dump(temp_q, f, indent=3)
 
     f.close()
     return True

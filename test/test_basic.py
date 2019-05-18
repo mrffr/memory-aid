@@ -35,7 +35,7 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(q['question'], "q")
         self.assertEqual(q['answer'], "a")
         self.assertEqual(q['next_time'], now)
-        self.assertEqual(q['interval'], 1)
+        self.assertEqual(q['interval'], 0)
         self.assertEqual(q['ease'], 2.5)
         self.assertEqual(q['times_answered'], 0)
         self.assertEqual(q['tags'], [])
@@ -71,7 +71,7 @@ class TestMemoryAid(unittest.TestCase):
         upd_q = ma.update_question(q, 0)
         self.assertEqual(upd_q['ease'], 2.2)
         self.assertEqual(upd_q['correct_run'], 0)
-        self.assertEqual(upd_q['interval'], 1)
+        self.assertEqual(upd_q['interval'], 0)
 
         # we got it right
         q = dict(orig_q) # reset question
@@ -91,7 +91,7 @@ class TestMemoryAid(unittest.TestCase):
         upd_q = ma.update_question(q, 2)
         self.assertEqual(upd_q['ease'], 2.38)
         self.assertEqual(upd_q['correct_run'], 0)
-        self.assertEqual(upd_q['interval'], 1)
+        self.assertEqual(upd_q['interval'], 0)
 
 
 

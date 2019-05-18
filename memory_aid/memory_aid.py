@@ -52,7 +52,7 @@ def update_question(question, ease):
 
     # calculate the next interval to see the card
     if question['correct_run'] <= 1:
-        question['interval'] = 1
+        question['interval'] = 0
     elif question['correct_run'] == 2:
         question['interval'] = 2
     else:
@@ -102,19 +102,35 @@ def session(all_qs, session_ind):
 1 - Incorrect response; the correct one remembered
 0 - Complete blackout""")
 
-    # ask the questions
-    for ind in session_ind:
-        q = all_qs[ind]
-        ease = ask_question(q)
+    # ask the questions until no questions are due
+    while True:
+        still_due = []
 
-        # check for quitting
-        if ease == -1:
-            return all_qs
+        # ask due questions
+        for ind in session_ind:
+            q = all_qs[ind]
+            ease = ask_question(q)
 
-        # update question with results
-        q = update_question(q, ease)
+            # check for quitting
+            if ease == -1:
+                return all_qs
 
-        all_qs[ind] = q
+            # update question with results
+            q = update_question(q, ease)
+            all_qs[ind] = q
+
+            # if interval is 0 then it is still due today
+            if q['interval'] == 0:
+                still_due.append(ind)
+
+        # questions still due so continue loop
+        if len(still_due) > 0:
+            session_ind = still_due
+            continue
+
+        # if nothing is due then break
+        break
+
 
 
     return all_qs
