@@ -54,6 +54,8 @@ def update_question(question, ease):
     if question['correct_run'] <= 1:
         question['interval'] = 0
     elif question['correct_run'] == 2:
+        question['interval'] = 1
+    elif question['correct_run'] == 3:
         question['interval'] = 2
     else:
         question['interval'] *= question['ease']
