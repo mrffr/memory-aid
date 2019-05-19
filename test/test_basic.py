@@ -79,13 +79,13 @@ class TestMemoryAid(unittest.TestCase):
         upd_q = ma.update_question(q, 5)
         self.assertEqual(upd_q['ease'], 2.6)
         self.assertEqual(upd_q['correct_run'], 2)
-        self.assertEqual(upd_q['interval'], 2)
+        self.assertEqual(upd_q['interval'], 1)
 
         # right again
         upd_q = ma.update_question(q, 5)
         self.assertEqual(upd_q['ease'], 2.7)
         self.assertEqual(upd_q['correct_run'], 3)
-        self.assertEqual(upd_q['interval'], 5.4)
+        self.assertEqual(upd_q['interval'], 2)
 
         # wrong
         upd_q = ma.update_question(q, 2)
