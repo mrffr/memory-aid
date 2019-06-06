@@ -38,6 +38,8 @@ def filter_tags(all_qs, session_ind, tags):
 
 # update the question to set the next time we want to see it
 def update_question(question, ease):
+    question['times_answered'] += 1 # TODO this stat is unused
+
     # calculate new easiness for the question
     # based off past easiness
     ## TODO replace this with something else
