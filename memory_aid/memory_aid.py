@@ -58,7 +58,7 @@ def update_question(question, ease):
     elif question['correct_run'] == 2:
         question['interval'] = 1
     elif question['correct_run'] == 3:
-        question['interval'] = 2
+        question['interval'] = 3
     else:
         question['interval'] *= question['ease']
 
