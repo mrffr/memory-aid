@@ -60,11 +60,9 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(ma.filter_tags(test_qs, session_ind, []), [0,1,2])
         self.assertEqual(ma.filter_tags([], [], []), [])
 
-    def test_update_question(self):
+    def test_update_question_wrong(self):
         now = datetime.datetime.now()
         q = impexp.construct_question("q", "a", now)
-
-        orig_q = dict(q) # copy dict for comparisons below
 
         # test we got it wrong
         q['ease'] = 3
@@ -72,26 +70,33 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(upd_q['ease'], 2.2)
         self.assertEqual(upd_q['correct_run'], 0)
         self.assertEqual(upd_q['interval'], 0)
+        self.assertEqual(upd_q['times_answered'], 1)
+
+    def test_update_question_seq(self):
+        now = datetime.datetime.now()
+        q = impexp.construct_question("q", "a", now)
 
         # we got it right
-        q = dict(orig_q) # reset question
         q['correct_run'] = 1
         upd_q = ma.update_question(q, 5)
         self.assertEqual(upd_q['ease'], 2.6)
         self.assertEqual(upd_q['correct_run'], 2)
         self.assertEqual(upd_q['interval'], 1)
+        self.assertEqual(upd_q['times_answered'], 1)
 
         # right again
         upd_q = ma.update_question(q, 5)
         self.assertEqual(upd_q['ease'], 2.7)
         self.assertEqual(upd_q['correct_run'], 3)
-        self.assertEqual(upd_q['interval'], 2)
+        self.assertEqual(upd_q['interval'], 3)
+        self.assertEqual(upd_q['times_answered'], 2)
 
         # wrong
         upd_q = ma.update_question(q, 2)
         self.assertEqual(upd_q['ease'], 2.38)
         self.assertEqual(upd_q['correct_run'], 0)
         self.assertEqual(upd_q['interval'], 0)
+        self.assertEqual(upd_q['times_answered'], 3)
 
 
 
