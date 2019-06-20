@@ -148,7 +148,7 @@ def importing_questions(fname, all_qs):
         return []
 
     # need to merge it with the original set of questions
-    # ATM no duplicate detection or anything
+    # TODO: duplicate detection
 
     return all_qs + imp_qs
 
