@@ -20,7 +20,7 @@ def build_session_question_index(all_qs, today):
         if q['next_time'] <= today or q['correct_run'] == 0:
             session_ind.append(i)
 
-    print("Questions available this session:", len(session_ind))
+    print("Total questions available for this session:", len(session_ind))
     return session_ind
 
 # filter the session cards based on the tags selected
@@ -95,12 +95,8 @@ def ask_question(question):
 
         return inp
 
-# ask the questions for this session and update based on answers
-def session(all_qs, session_ind):
-    if session_ind == []:
-        return all_qs
-
-    print("Asking {} questions".format(len(session_ind)))
+def print_startup(num_qs):
+    print("Asking {} questions".format(num_qs))
     print("Rate the ease of answering each question as follows:")
     print("""5 - Perfect response
 4 - Correct response after a hesitation
@@ -108,6 +104,14 @@ def session(all_qs, session_ind):
 2 - Incorrect response; where the correct one seemed easy to recall
 1 - Incorrect response; the correct one remembered
 0 - Complete blackout""")
+    print()
+
+# ask the questions for this session and update based on answers
+def session(all_qs, session_ind):
+    if session_ind == []:
+        return all_qs
+
+    print_startup(len(session_ind))
 
     # ask the questions until no questions are due
     while True:
@@ -151,7 +155,7 @@ def importing_questions(fname, all_qs):
         return []
 
     # need to merge it with the original set of questions
-    # TODO: duplicate detection
+    # TODO: duplicate question detection
 
     return all_qs + imp_qs
 
