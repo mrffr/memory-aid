@@ -14,6 +14,12 @@ setuptools.setup(
     author='F Fitzgerald',
     url='https://github.com/mrffr/memory-aid',
 
+    entry_points={
+        'console_scripts': [
+            'memory-aid = memory_aid.memory_aid:main',
+            ],
+        },
+
     # the directory name manually specified to avoid including tests
     packages=['memory_aid'], 
     # identifiers for pypi
