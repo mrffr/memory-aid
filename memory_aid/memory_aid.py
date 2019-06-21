@@ -164,9 +164,14 @@ def main():
                         help="Import new questions from csv file.")
     args = parser.parse_args()
 
-    # load in questions
-    dirname = os.path.dirname(__file__)
-    question_file = os.path.join(dirname, '../questions/questions.json')
+    # load in questions from user directory
+    # TODO test windows
+    dirname = os.path.expanduser('~/.memory_aid')
+
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+
+    question_file = os.path.join(dirname, 'questions.json')
 
     all_qs = impexp.load_questions_json(question_file)
 
