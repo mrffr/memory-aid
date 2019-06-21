@@ -58,6 +58,8 @@ class TestMemoryAid(unittest.TestCase):
         self.assertEqual(ma.filter_tags(test_qs, session_ind, ["4","-1","1"]), [0])
         self.assertEqual(ma.filter_tags(test_qs, session_ind, ["4","-1","tech"]), [])
         self.assertEqual(ma.filter_tags(test_qs, session_ind, []), [0,1,2])
+        # test we only get one instance of a card for each match
+        self.assertEqual(ma.filter_tags(test_qs, session_ind, ["1","2"]), [0,1])
         self.assertEqual(ma.filter_tags([], [], []), [])
 
     def test_update_question_wrong(self):

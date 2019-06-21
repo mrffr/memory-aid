@@ -24,6 +24,7 @@ def build_session_question_index(all_qs, today):
     return session_ind
 
 # filter the session cards based on the tags selected
+# card is removed if it matches none of the tags
 def filter_tags(all_qs, session_ind, tags):
     if tags == []:
         return session_ind
@@ -34,6 +35,8 @@ def filter_tags(all_qs, session_ind, tags):
         for tag in tags:
             if tag in q['tags']:
                 new_ind.append(ind)
+                break
+
     return new_ind
 
 # update the question to set the next time we want to see it
@@ -158,7 +161,7 @@ def main():
     parser.add_argument('--tags',
                         nargs='*',
                         type=str,
-                        help="Filter questions available based on tags")
+                        help="Ask questions that match tags")
     parser.add_argument('--imp',
                         type=argparse.FileType('r'),
                         help="Import new questions from csv file.")
