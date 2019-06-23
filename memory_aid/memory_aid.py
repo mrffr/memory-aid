@@ -6,6 +6,7 @@ import datetime
 import random
 import math
 import argparse
+from pathlib import Path
 
 from . import import_export as impexp
 
@@ -172,13 +173,12 @@ def main():
     args = parser.parse_args()
 
     # load in questions from user directory
-    # TODO test windows
-    dirname = os.path.expanduser('~/.memory_aid')
+    dirname = Path.home().joinpath('.memory_aid')
 
-    if not os.path.exists(dirname):
-        os.mkdir(dirname)
+    if not Path.exists(dirname):
+        Path.mkdir(dirname)
 
-    question_file = os.path.join(dirname, 'questions.json')
+    question_file = dirname.joinpath('questions.json')
 
     all_qs = impexp.load_questions_json(question_file)
 
@@ -194,7 +194,7 @@ def main():
     # at this stage having no questions means something went wrong
     # since we aren't importing
     if all_qs == []:
-        print("No questions found.")
+        print("No questions were found try importing some questions first.")
         return
 
     # get questions for this session
