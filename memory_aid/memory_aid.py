@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import os
 import datetime
 import random
 import math
