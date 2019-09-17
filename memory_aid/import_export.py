@@ -3,11 +3,11 @@
 import csv
 import copy
 import json
-import datetime
+from datetime import datetime
 import sys
 
 # question is dictionary of key values
-# returns base question
+# this function returns base question
 def construct_question(q, a, next_time, tags = []):
     return {
         "question" : q,
@@ -24,7 +24,7 @@ def construct_question(q, a, next_time, tags = []):
 
 
 # import questions from csv file and return list of questions
-# questions are in format: q,a
+# questions in the csv file should be in the format of: q,a
 def import_questions_csv(fname):
     print("Importing questions from", fname)
 
@@ -37,7 +37,7 @@ def import_questions_csv(fname):
     csvr = csv.reader(f)
 
     # get the date
-    today = datetime.datetime.now().date()
+    today = datetime.now().date()
 
     # import each question
     questions = []
@@ -99,7 +99,7 @@ def load_questions_json(fname):
     # convert time string to datetime object
     qs = []
     for q in json_file:
-        q['next_time'] = datetime.datetime.strptime(q['next_time'], "%Y-%m-%d").date()
+        q['next_time'] = datetime.strptime(q['next_time'], "%Y-%m-%d").date()
         qs.append(q)
 
     print("Load successful:", len(qs), "questions loaded.")
