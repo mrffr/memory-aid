@@ -74,6 +74,8 @@ def update_question(question, ease):
 
 def ask_question(question):
     print("Q:", question['question'])
+    if question['tags']:
+        print("tags: ",*question['tags'])
     input()
     print("A:", question['answer'])
 
@@ -165,10 +167,10 @@ def main():
     parser.add_argument('--tags',
                         nargs='*',
                         type=str,
-                        help="Ask questions that match tags")
+                        help="Ask questions that match given tags.")
     parser.add_argument('--imp',
                         type=argparse.FileType('r'),
-                        help="Import new questions from csv file.")
+                        help="Import new questions from a given csv file.")
     args = parser.parse_args()
 
     # load in questions from user directory
