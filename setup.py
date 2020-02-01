@@ -7,7 +7,7 @@ with open("README.md",'r') as fh:
 
 setuptools.setup(
     name='memory-aid-mrffr',
-    version="0.0.2",
+    version="0.0.3",
     description='CLI utility to aid in memorizing facts using spaced repetition.',
     long_description=long_description,
     long_description_content_type="text/markdown",
