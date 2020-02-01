@@ -163,7 +163,7 @@ def importing_questions(fname, all_qs):
 
 def get_user_dir():
     xdg_dir = Path.home().joinpath('.config', 'memory_aid')
-    if Path.exists(xdg):
+    if Path.exists(xdg_dir):
         return xdg_dir
 
     dirname = Path.home().joinpath('.memory_aid')
