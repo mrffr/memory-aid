@@ -161,6 +161,17 @@ def importing_questions(fname, all_qs):
 
     return all_qs + imp_qs
 
+def get_user_dir():
+    xdg_dir = Path.home().joinpath('.config', 'memory_aid')
+    if Path.exists(xdg):
+        return xdg_dir
+
+    dirname = Path.home().joinpath('.memory_aid')
+
+    if not Path.exists(dirname):
+        Path.mkdir(dirname)
+    return dirname
+
 def main():
     # parse cmdline args
     parser = argparse.ArgumentParser(description='Memory helper/tester.')
@@ -174,10 +185,7 @@ def main():
     args = parser.parse_args()
 
     # load in questions from user directory
-    dirname = Path.home().joinpath('.memory_aid')
-
-    if not Path.exists(dirname):
-        Path.mkdir(dirname)
+    dirname = get_user_dir()
 
     question_file = dirname.joinpath('questions.json')
 
